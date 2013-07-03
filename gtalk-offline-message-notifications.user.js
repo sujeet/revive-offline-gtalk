@@ -16,84 +16,76 @@ function main () {
 
          function pingUrl (url) {
              var iframe = document.createElement ('iframe');
+             var old_iframe = document.getElementById ('gtalk_status_ping_iframe');
              iframe.setAttribute ('src', url);
-             document.body.appendChild (iframe);
-         }
-
-         function logoutPing () {
-             pingUrl (window.ping_url + "?logout");
-         }
-
-         function loginPing () {
-             pingUrl (window.ping_url + "?login");
-         }
-         
-         function prependOnclickCode (element, code_string) {
-             if (element === undefined) {
-                 return;
-             }
-             if (element.attributes["onclick"] === undefined) {
-                 element.setAttribute ("onclick", code_string);
+             iframe.setAttribute ('id', 'gtalk_status_ping_iframe');
+             if (old_iframe != null) {
+                 document.body.replaceChild (iframe, old_iframe);
              }
              else {
-                 element.setAttribute ("onclick", code_string + element.attributes["onclick"].value);
+                 document.body.appendChild (iframe);
              }
          }
 
-         function checkChange (classes) {
+         function ping () {
+             pingUrl (window.ping_url + "?iamonline");
+         }
+
+         // works on fact that an alert is shown
+         // saying "you are invisible. go visible."
+         // when one is invisible.
+         function isInvisible () {
+             var alert_divs = jQ ('div[role="alert"]');
+             for (var i = 0; i < alert_divs.length; i++) {
+                 if (alert_divs[i].innerText.search("You are invisible") + 1) {
+                     return true;
+                 }
+             }
+             return false;
+         }
+
+         // Keeps periodically changing the status
+         // (offline/busy/available) and sends a "iamonline"
+         // ping every time it detects busy, available or invisible.
+         function check_status () {
              var button = window.chat_status_change_button;
-             var new_classes = button.firstChild.getAttribute('class');
+             var classes = button.firstChild.getAttribute('class');
              var class_to_status_map = {
                  "Tr dk dh" : "online", // green
                  "Tr dk dj" : "online", // red
                  "Tr df"    : "offline" // invi, offline
              };
-             var old_state = class_to_status_map [classes];
-             var new_state = class_to_status_map [new_classes];
-             if (old_state != new_state) {
-                 if (new_state == "online") {
-                     // Login code here.
-                     loginPing();
-                 }
-                 else {
-                     // Logout code here.
-                     logoutPing();
-                 }
+             var state = class_to_status_map [classes];
+             if ((state == "online") ||
+                 ((state == "offline") && isInvisible ())){
+                 ping ();
              }
-             window.setTimeout (checkChange, 1000, new_classes);
-         }
-
-         function getGmailSignOut () {
-             var link_buttons = jQ("a[role='button']");
-             for (var i = 0; i < link_buttons.length; i++) {
-                 if (link_buttons[i].innerHTML.trim() == "Sign out") {
-                     window.gmail_sign_out_button = link_buttons[i];
-                     break;
-                 }
-             }
-             if (window.gmail_sign_out_button === undefined) {
-                 window.setTimeout (getGmailSignOut, 10000);
-             }
-             else {
-                 prependOnclickCode (window.gmail_sign_out_button, "logoutPing();");
-             }
+             window.setTimeout (arguments.callee, 
+                                window.gtalk_status_ping_duration_seconds * 1000);
          }
          
-         function getChatStatuses () {
+         // Locate the html element on page which indicates the
+         // status (idle/busy/available/offline) and store it in
+         // a variable.
+         // WHY: The extension loads as soon as the page loads
+         //      and by that time, (as gmail loads stuff dynamically)
+         //      the html element might not even exists. In that case,
+         //      we just call this function again, until it finds the element.
+         // Also, once found, stat monitoring it for change.        
+         function find_save_and_monitor_status_indicator () {
              var buttons = jQ('div[title="Options"]');
              if (buttons.length == 1) {
                  window.chat_status_change_button = buttons[0];
              }
              if (window.chat_status_change_button === undefined) {
-                 window.setTimeout (getChatStatuses, 10000);
+                 window.setTimeout (arguments.callee, 10000);
              }
              else {
-                 checkChange (window.chat_status_change_button.firstChild.getAttribute("class"));
+                 check_status (window.chat_status_change_button.firstChild.getAttribute("class"));
              }
          }
          
-         getGmailSignOut ();
-         getChatStatuses ();
+         find_save_and_monitor_status_indicator ();
      })();
 }
 
@@ -116,5 +108,6 @@ function addJQuery(callback) {
 // But, we can not provide this kind of patter in
 // the @match directive of the userscript :(
 if (window.document.URL.search ("#") + 1) {
+    window.gtalk_status_ping_duration_seconds = 60;
     addJQuery(main);
 }
