@@ -24,6 +24,7 @@ Download both the user.js and googlescript.js files from this repository.
 1. Execute the app as: "User accessing the web app"
 1. Who has access to the app "Only myself" or "Anyone" anything should work as you are only one who is going to use it anyway.
 1. Click "Deploy", then copy and store the "Current web app URL" somewhere. We will need it in the next part.
+1. Visit the above URL once in your browser, and authorize the script.
 
 #### Customizing and installing the userscript.
 
