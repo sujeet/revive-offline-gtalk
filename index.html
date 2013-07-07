@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Revive-offline-gtalk by sujeetgholap</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Revive-offline-gtalk</h1>
+        <h2>A google apps script and a userscript to bring back notification mails about offline gtalk pings.</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/sujeetgholap/revive-offline-gtalk/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/sujeetgholap/revive-offline-gtalk/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/sujeetgholap/revive-offline-gtalk" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a name="getting-back-offline-gtalk-message-notifications" class="anchor" href="#getting-back-offline-gtalk-message-notifications"><span class="octicon octicon-link"></span></a>Getting back offline Gtalk message notifications</h1>
+
+<h2>
+<a name="quick-install" class="anchor" href="#quick-install"><span class="octicon octicon-link"></span></a>Quick install</h2>
+
+<p>Just follow the instructions on my <a href="http://blog.sujeet.me/2013/07/get-back-gtalk-offline-message-notifications.html">blog</a></p>
+
+<h2>
+<a name="manual-install" class="anchor" href="#manual-install"><span class="octicon octicon-link"></span></a>Manual install</h2>
+
+<p>Download both the user.js and googlescript.js files from this repository.</p>
+
+<h4>
+<a name="setting-up-the-pinging-server" class="anchor" href="#setting-up-the-pinging-server"><span class="octicon octicon-link"></span></a>Setting up the pinging server</h4>
+
+<ol>
+<li>Go to <a href="https://script.google.com">google scripts site</a>.</li>
+<li>Click on "Blank Project".</li>
+<li>Copy and paste the code from the googlescript.js file into the browser.</li>
+<li>Go to "File" -&gt; "Manage versions..."</li>
+<li>Enter a project name. (say, "Gtalk offline message notifications")</li>
+<li>In the "Describe what has changed..." text box, enter the description. (say, "alpha version, directly copied from Sujeet's repository")</li>
+<li>Click "Save New Version". Then click "OK" at the bottom.</li>
+<li>Go to "Publish" -&gt; "Deploy as web app...".</li>
+<li>Project version : 1</li>
+<li>Execute the app as: "User accessing the web app"</li>
+<li>Who has access to the app "Only myself" or "Anyone" anything should work as you are only one who is going to use it anyway.</li>
+<li>Click "Deploy", then copy and store the "Current web app URL" somewhere. We will need it in the next part.</li>
+<li>Visit the above URL once in your browser, and authorize the script.</li>
+</ol><h4>
+<a name="customizing-and-installing-the-userscript" class="anchor" href="#customizing-and-installing-the-userscript"><span class="octicon octicon-link"></span></a>Customizing and installing the userscript.</h4>
+
+<p>In the user.js file, look at around line number 15, where it says "window.ping_url". Replace than URL with the one we got from setting up the ping server above.</p>
+
+<h5>
+<a name="firefox-users" class="anchor" href="#firefox-users"><span class="octicon octicon-link"></span></a>Firefox users</h5>
+
+<p>Install <a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">greasemonkey</a>, then drag and drop the user.js file into firefox. A greasemonkey installation window will pop up, click "install", you are done!</p>
+
+<h5>
+<a name="chrome-users" class="anchor" href="#chrome-users"><span class="octicon octicon-link"></span></a>Chrome users</h5>
+
+<p>Open the <a>extensions page</a>, then drag and drop the user.js file. Approve the installation and you are done!</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
